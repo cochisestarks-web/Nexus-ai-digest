@@ -19,14 +19,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Nexus AI Digest API", version="1.0.0", lifespan=lifespan)
 
+_raw_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173")
+_origins = [o.strip() for o in _raw_origins.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=_origins,
+    allow_origin_regex=r"https://.*\.netlify\.app" if "*" not in _origins else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
