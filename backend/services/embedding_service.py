@@ -1,35 +1,30 @@
 import os
 from typing import List
 
-from google import genai
+import google.generativeai as genai_legacy
 
-EMBEDDING_MODEL = "text-embedding-004"
-
-_client: genai.Client | None = None
+_configured = False
 
 
-def _get_client() -> genai.Client:
-    global _client
-    if _client is None:
-        # text-embedding-004 is only available on the v1 endpoint, not v1beta
-        _client = genai.Client(
-            api_key=os.environ["GEMINI_API_KEY"],
-            http_options={"api_version": "v1"},
-        )
-    return _client
+def _ensure_configured() -> None:
+    global _configured
+    if not _configured:
+        genai_legacy.configure(api_key=os.environ["GEMINI_API_KEY"])
+        _configured = True
 
 
 def embed_text(text: str) -> List[float]:
-    client = _get_client()
-    result = client.models.embed_content(
-        model=EMBEDDING_MODEL,
-        contents=text,
+    _ensure_configured()
+    result = genai_legacy.embed_content(
+        model="models/text-embedding-004",
+        content=text,
+        task_type="retrieval_document",
     )
-    return list(result.embeddings[0].values)
+    return result["embedding"]
 
 
 def embed_texts(texts: List[str]) -> List[List[float]]:
-    """Embed a list of texts sequentially. Rate-limited by Gemini API."""
+    """Embed a list of texts sequentially."""
     embeddings = []
     for i, text in enumerate(texts):
         try:
