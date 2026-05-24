@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from models.schemas import DigestItem, GenerateDigestRequest
-from services import chroma_service, embedding_service, llm_service
+from services import chroma_service, llm_service
 
 router = APIRouter(prefix="/api", tags=["digest"])
 
@@ -12,20 +12,16 @@ async def generate_digest(request: GenerateDigestRequest):
     RAG-powered digest generation.
 
     Flow:
-      1. Embed the user's profile (depth + focus areas) as a semantic query
-      2. Retrieve the top-K relevant articles from ChromaDB
-      3. Pass retrieved context + profile to Gemini (with Google Search grounding)
-      4. Return a structured DigestItem matching the frontend's TypeScript interface
+      1. Retrieve relevant articles from ChromaDB via keyword scoring
+      2. Pass retrieved context + profile to Gemini (with Google Search grounding)
+      3. Return a structured DigestItem matching the frontend's TypeScript interface
     """
     try:
-        # Step 1: Embed profile as a query
-        query = f"{request.profile.depth}: {', '.join(request.profile.focusAreas)}"
-        query_embedding = embedding_service.embed_query(query)
+        context_articles = chroma_service.get_relevant_articles(
+            focus_areas=request.profile.focusAreas,
+            n_results=10,
+        )
 
-        # Step 2: Retrieve context from vector store
-        context_articles = chroma_service.query_articles(query_embedding, n_results=10)
-
-        # Step 3: Generate with LLM
         digest = llm_service.generate_digest(
             profile=request.profile,
             previous_titles=request.previousTitles,
