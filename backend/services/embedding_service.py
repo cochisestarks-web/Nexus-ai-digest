@@ -11,7 +11,11 @@ _client: genai.Client | None = None
 def _get_client() -> genai.Client:
     global _client
     if _client is None:
-        _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        # text-embedding-004 is only available on the v1 endpoint, not v1beta
+        _client = genai.Client(
+            api_key=os.environ["GEMINI_API_KEY"],
+            http_options={"api_version": "v1"},
+        )
     return _client
 
 
