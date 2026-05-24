@@ -1,0 +1,8 @@
+{
+  "name": "Nexus AI Digest",
+  "description": "An autonomous intelligence pipeline that transforms chaotic AI news streams into high-density, deduplicated digests tailored to technical preferences using RAG-based grounding.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
