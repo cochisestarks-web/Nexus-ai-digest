@@ -20,7 +20,7 @@ async def generate_digest(request: GenerateDigestRequest):
     try:
         # Step 1: Embed profile as a query
         query = f"{request.profile.depth}: {', '.join(request.profile.focusAreas)}"
-        query_embedding = embedding_service.embed_text(query)
+        query_embedding = embedding_service.embed_query(query)
 
         # Step 2: Retrieve context from vector store
         context_articles = chroma_service.query_articles(query_embedding, n_results=10)
