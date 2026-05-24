@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la -d /c/Users/derek/nexus-ai-digest/.*)",
+      "Bash(grep -v \"^\\\\.\\\\{1,2\\\\}$\")",
+      "mcp__claude_ai_Netlify__netlify-team-services-reader",
+      "mcp__claude_ai_Netlify__netlify-project-services-updater",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Fix embedding client to use v1 API endpoint for text-embedding-004 *)",
+      "Bash(git push *)",
+      "Bash(git commit -m 'Switch embeddings to google-generativeai for reliable text-embedding-004 access *)",
+      "Bash(git commit -m 'Switch embeddings to ChromaDB DefaultEmbeddingFunction \\(all-MiniLM-L6-v2\\) *)",
+      "Bash(git commit -m 'Use embedding-001 via legacy SDK — fixes OOM and API 404 errors *)",
+      "Bash(git commit -m 'Replace embedding API with keyword-based retrieval over ChromaDB *)",
+      "mcp__claude_ai_Netlify__netlify-deploy-services-updater",
+      "Bash(VITE_API_URL=https://nexus-ai-digest.onrender.com npm run *)",
+      "Bash(npm install *)"
+    ]
+  }
+}
