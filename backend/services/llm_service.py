@@ -10,7 +10,7 @@ from google.genai import types
 
 from models.schemas import DigestItem, GroundingSource, TechnicalProfile
 
-DEFAULT_MODEL = "gemini-2.0-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 
 _client: genai.Client | None = None
 
